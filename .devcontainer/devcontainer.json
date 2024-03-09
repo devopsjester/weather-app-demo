@@ -1,6 +1,8 @@
 {
     "name": "Go",
-    "image": "golang:1.22.1",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
     "extensions": [
         "golang.go",
         "GitHub.copilot-chat"
