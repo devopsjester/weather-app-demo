@@ -2,13 +2,47 @@
 <html>
 <head>
     <title>Home Page</title>
+    <script>
+        function getWeatherByZipcode(event) {
+            event.preventDefault();
+            var zipcode = document.getElementById("zipcode").value;
+            window.location.href = "/weather/zipcode/" + zipcode;
+        }
+
+        function getWeatherByCityAndState(event) {
+            event.preventDefault();
+            var city = document.getElementById("city").value;
+            var state = document.getElementById("state").value;
+            window.location.href = "/weather/city/" + city + "/state/" + state;
+        }
+
+        function switchForm() {
+            var zipcodeForm = document.getElementById("zipcodeForm");
+            var cityStateForm = document.getElementById("cityStateForm");
+            if (zipcodeForm.style.display === "none") {
+                zipcodeForm.style.display = "block";
+                cityStateForm.style.display = "none";
+            } else {
+                zipcodeForm.style.display = "none";
+                cityStateForm.style.display = "block";
+            }
+        }
+    </script>
 </head>
 <body>
     <h1>Hello, weather!</h1>
-    <form action="/weather" method="get">
+    <button onclick="switchForm()">Switch Form</button>
+    <form id="zipcodeForm" onsubmit="getWeatherByZipcode(event)">
         <label for="zipcode">Enter your zipcode:</label><br>
         <input type="text" id="zipcode" name="zipcode"><br>
-        <input type="submit" value="Get Weather">
+        <input type="submit" value="Get Weather by Zipcode">
+    </form>
+    <form id="cityStateForm" onsubmit="getWeatherByCityAndState(event)" style="display: none;">
+        <label for="city">Enter your city:</label><br>
+        <input type="text" id="city" name="city"><br>
+        <label for="state">Enter your state:</label><br>
+        <input type="text" id="state" name="state"><br>
+        <input type="submit" value="Get Weather by City and State">
     </form>
 </body>
 </html>

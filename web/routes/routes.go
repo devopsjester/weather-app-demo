@@ -9,5 +9,6 @@ import (
 func SetupRoutes(router *gin.Engine) {
 	// Add your code here
 	router.GET("/", controllers.HomeHandler)
-	router.GET("/weather", controllers.WeatherHandler)
+	router.GET("/weather/zipcode/:zipcode", controllers.WeatherHandler)
+	router.GET("/weather/city/:city/state/:state", controllers.WeatherHandler)
 }
