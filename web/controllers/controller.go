@@ -7,13 +7,17 @@ import (
 	"net/http"
 	"os"
 
+	"io"
+
 	"github.com/gin-gonic/gin"
 )
 
 type Location struct {
 	Country string `json:"country"`
-	State   string `json:"state"`
-	City    string `json:"city"`
+	Places  []struct {
+		City  string `json:"place name"`
+		State string `json:"state"`
+	} `json:"places"`
 }
 
 type Weather struct {
@@ -46,7 +50,7 @@ func getCityAndState(zipcode string) (string, string) {
 	}
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(io.Reader(resp.Body))
 	if err != nil {
 		fmt.Println(err)
 		return "", ""
@@ -55,7 +59,7 @@ func getCityAndState(zipcode string) (string, string) {
 	var location Location
 	json.Unmarshal(body, &location)
 
-	return location.City, location.State
+	return location.Places[0].City, location.Places[0].State
 }
 
 func getTemperature(city, state string) float64 {
