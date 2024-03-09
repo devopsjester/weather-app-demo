@@ -46,11 +46,11 @@ func WeatherHandler(c *gin.Context) {
 	} else if city != "" && state != "" {
 		weatherInfo = getWeatherByCityAndState(city, state)
 	} else {
-		c.String(http.StatusBadRequest, "Invalid parameters. Please provide either a zipcode or a city and state.")
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid parameters. Please provide either a zipcode or a city and state."})
 		return
 	}
 
-	c.String(200, "%s", weatherInfo)
+	c.JSON(http.StatusOK, gin.H{"weatherInfo": weatherInfo})
 }
 
 func getWeatherByZipcode(zipcode string) string {

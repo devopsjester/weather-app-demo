@@ -2,24 +2,42 @@
 <html>
 <head>
     <title>Home Page</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <script>
         function getWeatherByZipcode(event) {
             event.preventDefault();
             var zipcode = document.getElementById("zipcode").value;
-            window.location.href = "/weather/zipcode/" + zipcode;
+            fetch("/weather/zipcode/" + zipcode)
+                .then(response => response.json())
+                .then(data => {
+                    var resultDiv = document.getElementById("result");
+                    resultDiv.innerHTML = ''; // Clear previous results
+                    var h2 = document.createElement('h2');
+                    h2.textContent = data.weatherInfo;
+                    resultDiv.appendChild(h2);
+                });
         }
 
         function getWeatherByCityAndState(event) {
             event.preventDefault();
             var city = document.getElementById("city").value;
             var state = document.getElementById("state").value;
-            window.location.href = "/weather/city/" + city + "/state/" + state;
+            fetch("/weather/city/" + city + "/state/" + state)
+                .then(response => response.json())
+                .then(data => {
+                    var resultDiv = document.getElementById("result");
+                    resultDiv.innerHTML = ''; // Clear previous results
+                    var h2 = document.createElement('h2');
+                    h2.textContent = data.weatherInfo;
+                    resultDiv.appendChild(h2);
+                });
         }
 
         function switchForm() {
             var zipcodeForm = document.getElementById("zipcodeForm");
             var cityStateForm = document.getElementById("cityStateForm");
-            if (zipcodeForm.style.display === "none") {
+            var select = document.querySelector('input[name="formSelect"]:checked').value;
+            if (select === "zipcode") {
                 zipcodeForm.style.display = "block";
                 cityStateForm.style.display = "none";
             } else {
@@ -29,20 +47,38 @@
         }
     </script>
 </head>
-<body>
-    <h1>Hello, weather!</h1>
-    <button onclick="switchForm()">Switch Form</button>
-    <form id="zipcodeForm" onsubmit="getWeatherByZipcode(event)">
-        <label for="zipcode">Enter your zipcode:</label><br>
-        <input type="text" id="zipcode" name="zipcode"><br>
-        <input type="submit" value="Get Weather by Zipcode">
+<body class="container py-5">
+    <h1 class="mb-5">Hello, weather!</h1>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="formSelect" id="zipcodeRadio" value="zipcode" checked onclick="switchForm()">
+        <label class="form-check-label" for="zipcodeRadio">
+            Zipcode
+        </label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="formSelect" id="cityStateRadio" value="cityState" onclick="switchForm()">
+        <label class="form-check-label" for="cityStateRadio">
+            City & State
+        </label>
+    </div>
+    <form id="zipcodeForm" onsubmit="getWeatherByZipcode(event)" class="mb-3">
+        <div class="form-group">
+            <label for="zipcode">Enter your zipcode:</label>
+            <input type="text" id="zipcode" name="zipcode" class="form-control">
+        </div>
+        <input type="submit" value="Get Weather by Zipcode" class="btn btn-success">
     </form>
-    <form id="cityStateForm" onsubmit="getWeatherByCityAndState(event)" style="display: none;">
-        <label for="city">Enter your city:</label><br>
-        <input type="text" id="city" name="city"><br>
-        <label for="state">Enter your state:</label><br>
-        <input type="text" id="state" name="state"><br>
-        <input type="submit" value="Get Weather by City and State">
+    <form id="cityStateForm" onsubmit="getWeatherByCityAndState(event)" style="display: none;" class="mb-3">
+        <div class="form-group">
+            <label for="city">Enter your city:</label>
+            <input type="text" id="city" name="city" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="state">Enter your state:</label>
+            <input type="text" id="state" name="state" class="form-control">
+        </div>
+        <input type="submit" value="Get Weather by City and State" class="btn btn-success">
     </form>
+    <div id="result" class="mt-3"></div>
 </body>
 </html>
